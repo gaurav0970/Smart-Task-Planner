@@ -1,119 +1,210 @@
-**Smart Task Planner**
+Here is the **professional, clean GitHub-formatted README.md** with **no emojis**, **no fancy characters**, and perfect Markdown formatting.
 
-A small demo project that uses a lightweight AI-style planner in the backend (Flask) to break down user goals into actionable tasks, timelines, dependencies and a frontend to interact with the service.
+---
 
-**Table of Contents**
-- **Project Overview**: Quick description and features
-- **How It Works**: Architecture and algorithmic flow
-- **Getting Started**: Run the backend and frontend locally (PowerShell examples)
-- **API Endpoints**: Useful endpoints and example requests
-- **Project Screenshots**: Placeholders for screenshots you can add
-- **Troubleshooting**: Common issues and fixes
-- **Contributing**: How to contribute
-- **License**
+# Smart Task Planner
 
-**Project Overview**
-- **Purpose**: Convert high-level goals into a task plan with phases, start/end dates, dependencies and priorities.
-- **Tech stack**: **Backend**: `Flask` (Python). **Frontend**: Plain HTML/CSS/JS. Small in-memory store for demo purposes.
-- **Key features**: Domain detection (software/marketing/event), task breakdown, dependency generation, simple critical-path estimation, export controls in the UI.
+A lightweight AI-powered planner that converts user goals into actionable tasks with timelines, dependencies, and a clean frontend interface.
 
-**How It Works**
-- **High level**: The frontend collects a goal description and a timeline (weeks) then requests the backend `/api/plan` endpoint. The backend's `SmartTaskPlanner` class analyzes the goal and emits a plan object with tasks and metadata.
-- **Backend flow**:
-  - `detect_domain(goal_text)` — guess project domain from keywords.
-  - `break_down_goal(goal_text, timeline_weeks)` — main planner: picks phases, generates tasks per phase, estimates durations, assigns start/end dates, dependencies and priorities.
-  - `generate_dependencies(task_index, total_tasks)` — a heuristic that links most tasks to previous ones and occasionally to earlier tasks.
-  - `calculate_critical_path(tasks)` — a simple heuristic to identify a likely critical path.
-  - Plans are stored in a simple in-memory dict (`task_plans`) and exposed via REST endpoints for retrieval.
+---
 
-**Project Structure (important files)**
-- `backend/app.py` — Flask API and planning logic (main server file).
-- `backend/requirements.txt` — Python dependencies for the backend.
-- `frontend/index.html` — Single-page frontend UI.
-- `frontend/style.css` and `frontend/script.js` — UI styles and client logic.
+## Table of Contents
 
-**Getting Started (Run locally)**
-These commands use Windows PowerShell syntax. Adjust if you prefer another shell.
+* [Project Overview](#project-overview)
+* [How It Works](#how-it-works)
+* [Project Structure](#project-structure)
+* [Getting Started](#getting-started)
+* [API Endpoints and Examples](#api-endpoints-and-examples)
+* [Project Screenshots](#project-screenshots)
+* [Troubleshooting](#troubleshooting)
+* [Contributing](#contributing)
+* [License](#license)
 
-1) Prepare Python environment (recommended)
+---
 
-```powershell
+## Project Overview
+
+### Purpose
+
+Smart Task Planner transforms a high-level goal (for example: "Launch a mobile app in 8 weeks") into a detailed, structured task plan with:
+
+* Project phases
+* Task breakdown
+* Estimated durations
+* Start and end dates
+* Task dependencies
+* Priority levels
+* Critical path estimation
+
+### Tech Stack
+
+* Backend: Flask (Python)
+* Frontend: HTML, CSS, JavaScript
+* Storage: In-memory dictionary (demo only)
+
+### Key Features
+
+* Automatic domain detection (software, event, marketing, general)
+* Task generation based on goal and timeline
+* Duration estimation and scheduling
+* Dependency generation
+* Simple critical path prediction
+* Single-page frontend interface
+
+---
+
+## How It Works
+
+### High-Level Flow
+
+1. The user enters a project goal and a timeline in weeks.
+2. The frontend sends this data to `POST /api/plan`.
+3. The backend processes the input using the `SmartTaskPlanner` class:
+
+   * Detects the domain of the goal
+   * Selects phases
+   * Generates tasks within each phase
+   * Assigns start and end dates
+   * Creates dependencies
+   * Estimates the critical path
+4. The generated plan is stored in memory and returned as a JSON response.
+
+### Main Backend Functions
+
+* `detect_domain(goal_text)` — Determines the type of project.
+* `break_down_goal(goal_text, timeline_weeks)` — Creates the complete plan structure.
+* `generate_dependencies(task_index, total_tasks)` — Generates realistic task dependencies.
+* `calculate_critical_path(tasks)` — Estimates the longest dependency chain.
+
+---
+
+## Project Structure
+
+```
+Smart-Task-Planner/
+│
+├── backend/
+│   ├── app.py                 # Flask API and planning logic
+│   └── requirements.txt       # Python dependencies
+│
+├── frontend/
+│   ├── index.html             # Main user interface
+│   ├── style.css              # Styles
+│   └── script.js              # Frontend logic and API calls
+│
+├── Images/                    # Screenshots used in README
+│   ├── screenshot_homepage.png
+│   ├── screenshot_goal.png
+│   ├── screenshot_loading.png
+│   ├── screenshot_plan.png
+│   └── screenshot_timeline.png
+│
+└── README.md
+```
+
+---
+
+## Getting Started
+
+### Step 1: Create and Activate a Virtual Environment
+
+```
 python -m venv .venv
 .\\.venv\\Scripts\\Activate.ps1
 pip install -r backend/requirements.txt
 ```
 
-2) Run the backend API
+### Step 2: Run the Backend Server
 
-```powershell
+```
 $env:PORT = '5000'
-python backend/app.py
-
 python backend/app.py
 ```
 
-The server listens on `http://localhost:5000` by default and prints helpful links (root docs, health check, sample plan).
+The server runs at:
+[http://localhost:5000](http://localhost:5000)
 
-3) Serve the frontend
+### Step 3: Start the Frontend
 
-Option A — open directly (quick demo):
+**Option A: Open directly**
 
-```powershell
+```
 start ./frontend/index.html
 ```
 
-Option B — run a local static server (recommended for fetch/XHR to backend when using CORS):
+**Option B: Serve with a local HTTP server**
 
-```powershell
+```
 cd frontend
 python -m http.server 8000
 ```
 
-Notes:
-- The backend enables CORS so the frontend served from a different port should be able to reach it.
-- If you change the backend port, update the JavaScript `fetch` URL in `frontend/script.js` accordingly.
+---
 
-**API Endpoints & Examples**
-- `GET /` — API info
-- `POST /api/plan` — Generate plan
-- `GET /api/plans` — List saved plans
-- `GET /api/plans/<id>` — Get a single plan
-- `GET /api/sample` — Get a sample generated plan
-- `GET /health` — Health check
+## API Endpoints and Examples
 
-Example `curl` (bash)
+### Endpoints
 
-```bash
-curl -X POST http://localhost:5000/api/plan \\
-  -H "Content-Type: application/json" \\
-  -d '{"goal": "Launch a mobile app for fitness tracking", "timeline": 8}'
+| Method | Endpoint          | Description              |
+| ------ | ----------------- | ------------------------ |
+| GET    | `/`               | API info                 |
+| POST   | `/api/plan`       | Generate a task plan     |
+| GET    | `/api/plans`      | List all saved plans     |
+| GET    | `/api/plans/<id>` | Retrieve a specific plan |
+| GET    | `/api/sample`     | Sample generated plan    |
+| GET    | `/health`         | Health check             |
+
+### Example: cURL (Linux / macOS)
+
+```
+curl -X POST http://localhost:5000/api/plan \
+  -H "Content-Type: application/json" \
+  -d '{"goal": "Launch a mobile app", "timeline": 8}'
 ```
 
-Example PowerShell (Invoke-RestMethod)
+### Example: PowerShell
 
-```powershell
-Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/plan -ContentType 'application/json' -Body (@{goal='Launch a mobile app for fitness tracking'; timeline=8} | ConvertTo-Json)
+```
+Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/plan -ContentType 'application/json' -Body (@{goal='Launch a mobile app'; timeline=8} | ConvertTo-Json)
 ```
 
-**Project Screenshots**
+---
+
+## Project Screenshots
 
 ### Homepage
+
 ![Homepage](Images/screenshot_homepage.png)
 
 ### Goal Input
+
 ![Goal Input](Images/screenshot_goal.png)
 
 ### Generating Task
+
 ![Generating Plan](Images/screenshot_loading.png)
 
-### Timeline Visualization
+### Plan Summary and Timeline
+
 ![Plan Summary](Images/screenshot_plan.png)
 
 ### Export Options
+
 ![Timeline](Images/screenshot_timeline.png)
 
+---
 
+## Troubleshooting
 
+* Backend not starting
+  Ensure all Python dependencies are installed and Python version is 3.8+.
 
+* Frontend cannot talk to backend
+  Check the browser console for CORS or port issues. Ensure backend is running on the expected port.
 
+* Virtual environment activation blocked in PowerShell
+  Run:
 
+  ```
+  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+  ```
