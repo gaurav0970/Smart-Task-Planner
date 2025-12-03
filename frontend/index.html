@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Task Planner - AI-Powered Project Planning</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Smart Task Planner</h1>
+            </div>
+            <p class="tagline">AI-powered goal breakdown into actionable tasks with timelines</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section card">
+                <div class="section-header">
+                    <i class="fas fa-bullseye"></i>
+                    <h2>Define Your Goal</h2>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-group">
+                        <label for="goalInput">
+                            <i class="fas fa-flag"></i> What do you want to achieve?
+                        </label>
+                        <textarea 
+                            id="goalInput" 
+                            placeholder="Example: Launch a mobile app for fitness tracking in 8 weeks"
+                            rows="3"
+                        ></textarea>
+                        <div class="char-count">
+                            <span id="charCount">0</span> characters
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timelineInput">
+                            <i class="fas fa-calendar-alt"></i> Timeline (weeks)
+                        </label>
+                        <div class="timeline-control">
+                            <input 
+                                type="range" 
+                                id="timelineInput" 
+                                min="1" 
+                                max="52" 
+                                value="8"
+                            >
+                            <div class="timeline-display">
+                                <span id="timelineValue">8</span>
+                                <span>weeks</span>
+                            </div>
+                        </div>
+                        <div class="timeline-legend">
+                            <span>Short-term (1-4 weeks)</span>
+                            <span>Medium-term (5-12 weeks)</span>
+                            <span>Long-term (13+ weeks)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-lightbulb"></i> Quick Examples
+                        </label>
+                        <div class="examples-grid">
+                            <button class="example-btn" data-goal="Launch an e-commerce website" data-timeline="12">
+                                <i class="fas fa-shopping-cart"></i>
+                                E-commerce Website (12 weeks)
+                            </button>
+                            <button class="example-btn" data-goal="Organize a tech conference" data-timeline="16">
+                                <i class="fas fa-users"></i>
+                                Tech Conference (16 weeks)
+                            </button>
+                            <button class="example-btn" data-goal="Create a marketing campaign" data-timeline="6">
+                                <i class="fas fa-bullhorn"></i>
+                                Marketing Campaign (6 weeks)
+                            </button>
+                            <button class="example-btn" data-goal="Develop a mobile app" data-timeline="8">
+                                <i class="fas fa-mobile-alt"></i>
+                                Mobile App (8 weeks)
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button id="generateBtn" class="btn btn-primary">
+                        <i class="fas fa-magic"></i>
+                        Generate Smart Plan
+                    </button>
+                    
+                    <div class="api-status">
+                        <i class="fas fa-server"></i>
+                        <span id="apiStatus">Checking backend connection...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Indicator -->
+            <section id="loadingSection" class="loading-section card" style="display: none;">
+                <div class="loading-content">
+                    <div class="spinner">
+                        <i class="fas fa-cog fa-spin"></i>
+                    </div>
+                    <h3>AI is analyzing your goal...</h3>
+                    <p class="loading-text">Breaking down tasks, calculating dependencies, and optimizing timeline</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="loading-steps">
+                        <div class="step active">
+                            <i class="fas fa-search"></i>
+                            <span>Analyzing goal complexity</span>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Identifying dependencies</span>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-calendar"></i>
+                            <span>Calculating timelines</span>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-tasks"></i>
+                            <span>Generating task breakdown</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section" style="display: none;">
+                <!-- Plan Summary -->
+                <div class="plan-summary card">
+                    <div class="section-header">
+                        <i class="fas fa-chart-pie"></i>
+                        <h2>Plan Summary</h2>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-item">
+                            <div class="summary-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="summary-text">
+                                <h3 id="summaryGoal">Goal will appear here</h3>
+                                <p id="summaryDomain">Domain: Analyzing...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-stats">
+                            <div class="stat">
+                                <div class="stat-value" id="statTasks">0</div>
+                                <div class="stat-label">Total Tasks</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="statTimeline">0</div>
+                                <div class="stat-label">Weeks</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="statStart">-</div>
+                                <div class="stat-label">Start Date</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="statEnd">-</div>
+                                <div class="stat-label">End Date</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="statComplexity">-</div>
+                                <div class="stat-label">Complexity</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task List -->
+                <div class="task-list card">
+                    <div class="section-header">
+                        <i class="fas fa-list-check"></i>
+                        <h2>Actionable Tasks</h2>
+                        <div class="filter-controls">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="high">High Priority</button>
+                            <button class="filter-btn" data-filter="medium">Medium Priority</button>
+                            <button class="filter-btn" data-filter="low">Low Priority</button>
+                        </div>
+                    </div>
+                    <div id="tasksContainer" class="tasks-container">
+                        <!-- Tasks will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Timeline Visualization -->
+                <div class="timeline-visualization card">
+                    <div class="section-header">
+                        <i class="fas fa-chart-timeline"></i>
+                        <h2>Project Timeline</h2>
+                    </div>
+                    <div id="timelineContainer" class="timeline-container">
+                        <!-- Timeline will be dynamically generated here -->
+                    </div>
+                </div>
+
+                <!-- Dependencies Graph -->
+                <div class="dependencies-card card">
+                    <div class="section-header">
+                        <i class="fas fa-project-diagram"></i>
+                        <h2>Task Dependencies</h2>
+                    </div>
+                    <div id="dependenciesContainer" class="dependencies-container">
+                        <!-- Dependencies visualization will be here -->
+                    </div>
+                </div>
+
+                <!-- Export Controls -->
+                <div class="export-controls card">
+                    <div class="section-header">
+                        <i class="fas fa-download"></i>
+                        <h2>Export Plan</h2>
+                    </div>
+                    <div class="export-buttons">
+                        <button id="exportJsonBtn" class="btn btn-secondary">
+                            <i class="fas fa-file-code"></i> Export as JSON
+                        </button>
+                        <button id="exportTextBtn" class="btn btn-secondary">
+                            <i class="fas fa-file-text"></i> Export as Text
+                        </button>
+                        <button id="printBtn" class="btn btn-secondary">
+                            <i class="fas fa-print"></i> Print Plan
+                        </button>
+                        <button id="newPlanBtn" class="btn btn-secondary">
+                            <i class="fas fa-plus"></i> Create New Plan
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="info-section card">
+                <div class="section-header">
+                    <i class="fas fa-info-circle"></i>
+                    <h2>How It Works</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>AI Analysis</h3>
+                        <p>Our AI analyzes your goal to understand complexity, domain, and requirements.</p>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h3>Smart Breakdown</h3>
+                        <p>Goals are broken down into logical phases and actionable tasks with dependencies.</p>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3>Timeline Optimization</h3>
+                        <p>Realistic timelines are calculated based on task complexity and dependencies.</p>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h3>Export & Share</h3>
+                        <p>Export your plan in multiple formats for easy sharing and implementation.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-brain"></i>
+                    <span>Smart Task Planner</span>
+                </div>
+                <p class="footer-description">
+                    AI-powered project planning tool. Break down any goal into actionable tasks.
+                </p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">
+                        <i class="fas fa-code"></i> API Documentation
+                    </a>
+                    <a href="#" class="footer-link">
+                        <i class="fas fa-question-circle"></i> Help
+                    </a>
+                    <a href="#" class="footer-link">
+                        <i class="fas fa-envelope"></i> Contact
+                    </a>
+                </div>
+                <div class="footer-bottom">
+                    <p>© 2024 Smart Task Planner. Demo project for educational purposes.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Flask</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">AI Planning</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- JavaScript Files -->
+    <script src="script.js"></script>
+</body>
+</html>
