@@ -113,23 +113,6 @@ Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/plan -ContentType 
 ![Timeline](Images/screenshot_timeline.png)
 
 
-You can display images inline in this README by using the relative paths, for example:
-
-```
-![Homepage](Images/Screenshot 2025-12-03 152803.png)
-```
-
-If you'd prefer a separate `docs/screenshots/` folder, copy or move images there and update the paths above.
-
-**Troubleshooting**
-- If the backend fails to start: ensure dependencies are installed and Python version is 3.8+.
-- If the frontend cannot reach the backend: check the console for CORS or network errors and ensure the backend is running and the ports match.
-- If PowerShell blocks script execution when activating the venv: run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` (requires admin rights or confirm prompt). Revert policy after if desired.
-
-
-If you'd like, I can:
-- add a small `docs/` README rendering with actual screenshots after you provide them,
-- or patch `frontend/script.js` to include the API base URL in a central constant.
 
 
 
