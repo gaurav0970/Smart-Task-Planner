@@ -103,13 +103,13 @@ Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/plan -ContentType 
 ### Goal Input
 ![Goal Input](Images/screenshot_goal.png)
 
-### Generating Plan
+### Generating Task
 ![Generating Plan](Images/screenshot_loading.png)
 
-### Plan Summary
+### Timeline Visualization
 ![Plan Summary](Images/screenshot_plan.png)
 
-### Timeline Visualization
+### Export Options
 ![Timeline](Images/screenshot_timeline.png)
 
 
@@ -130,6 +130,7 @@ If you'd prefer a separate `docs/screenshots/` folder, copy or move images there
 If you'd like, I can:
 - add a small `docs/` README rendering with actual screenshots after you provide them,
 - or patch `frontend/script.js` to include the API base URL in a central constant.
+
 
 
 
