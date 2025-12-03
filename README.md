@@ -1,7 +1,3 @@
-Here is the **professional, clean GitHub-formatted README.md** with **no emojis**, **no fancy characters**, and perfect Markdown formatting.
-
----
-
 # Smart Task Planner
 
 A lightweight AI-powered planner that converts user goals into actionable tasks with timelines, dependencies, and a clean frontend interface.
@@ -208,3 +204,4 @@ Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/plan -ContentType 
   ```
   Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
   ```
+
